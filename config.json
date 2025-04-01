@@ -44,9 +44,9 @@
     "enable": false,
     "with_nerd_font": true,
     "fix_meta_table": true,
-    "clean_cache": false,
-    "narrow": false,
-    "use_hinted": false,
+    "clean_cache": true,
+    "narrow": true,
+    "use_hinted": true,
     "use_static_base_font": true
   }
 }
