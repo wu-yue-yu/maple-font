@@ -1,10 +1,19 @@
 ![Cover](./resources/header.png)
 
 <p align="center">
-  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/subframe7536/maple-font">
-  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/subframe7536/maple-font/total">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/subframe7536/maple-font">
+  <a href="https://trendshift.io/repositories/13165" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13165" alt="subframe7536%2Fmaple-font | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  <a href="https://hellogithub.com/repository/0601f355bd824d88b58f1af3066c486a" target="_blank"><img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=0601f355bd824d88b58f1af3066c486a&claim_uid=AO0yWRQ48ITGNqK" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+</p>
+<p align="center">
+  <img alt="GitHub Repo Stars" src="https://img.shields.io/github/stars/subframe7536/maple-font">
+  <img alt="GitHub Repo Forks" src="https://img.shields.io/github/forks/subframe7536/maple-font">
   <img alt="X (formerly Twitter) Follow" src="https://img.shields.io/twitter/follow/subframe7536">
+</p>
+<p align="center">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/subframe7536/maple-font">
+  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/subframe7536/maple-font/total">
+  <img alt="GitHub Repo License" src="https://img.shields.io/github/license/subframe7536/maple-font">
+  <img alt="GitHub Repo Issues" src="https://img.shields.io/github/issues/subframe7536/maple-font">
 </p>
 
 <p align="center">
@@ -472,9 +481,6 @@ fonts.packages = with pkgs; [
 
 See in [document](./source/features/README.md) or try it in [Playground](https://font.subf.dev/en/playground)
 
-> [!note]
-> The web tool for custom build is under development.
-
 ## Naming FAQ
 
 ### Features
@@ -503,12 +509,15 @@ See in [document](./source/features/README.md) or try it in [Playground](https:/
 - Why there exists `-AutoHint` and `-unhinted` suffix?
   - for backward compatibility, I keep the original naming scheme. `-AutoHint` is only used for `TTF` format.
 
-
 ## Custom Build
 
 The [`config.json`](./config.json) file is used to configure the build process. Checkout the [schema](./source/schema.json) or [document](./source/features/README.md) for more details.
 
 There also have some [command line options](#build-script-usage) for customizing the build process. Cli options have higher priority than options in `config.json`.
+
+### Build In Browser
+
+Go to [Playground](https://font.subf.dev/en/playground), and click "Custom Build" button in the bottom left corner
 
 ### Use Github Actions
 
@@ -546,6 +555,8 @@ If you have trouble installing the dependencies, just create a new GitHub Codesp
 
 #### Custom Nerd-Font
 
+If you just want to get fixed width icons, setup `"nerd_font.mono": true` in `config.json` or add `--nf-mono` flag to build script args.
+
 For custom `font-patcher` args, `font-forge` (and maybe `python3-fontforge` as well) is required.
 
 Maybe you should also change `"nerd_font.extra_args"` in [config.json](./config.json)
@@ -557,17 +568,32 @@ Default args: `-l --careful --outputdir dir`
 
 Run `build.py` with `--normal` flag, make the font looks not such "Opinioned" , just like `JetBrains Mono` (with slashed zero).
 
+If you are using variable font (NOT recommended), please enable `calt` to make all features work.
+
+Enabled features:
+<!-- NORMAL -->
+```
+cv01, cv02, cv33, cv34, cv35, cv36, cv61, cv62, ss05, ss06, ss07, ss08
+```
+<!-- NORMAL -->
+
+[Online Preview](https://font.subf.dev/en/playground?normal)
+
 #### Font Feature Freeze
 
-There are three kind of options for feature freeze ([Why](https://github.com/subframe7536/maple-font/issues/233#issuecomment-2410170270)):
+There are three kinds of options for feature freeze ([Why](https://github.com/subframe7536/maple-font/issues/233#issuecomment-2410170270)):
 
 1. `enable`: Forcely enable the features without setting up `cvXX` / `ssXX` / `zero` in font features config, just as default glyphs / ligatures
 2. `disable`: Remove the features in `cvXX` / `ssXX` / `zero`, which will no longer effect, even if you enable it manually
 3. `ignore`: Do nothing
 
-#### Load Custom Feature File
+#### Custom OpenType Feature
 
-Run `build.py` with `--apply-fea-file` flag, the feature file from [`source/features/{regular,italic}.fea`](./source/features) will be applied into variable font. You can modify it to change all features, e.g. remove some ligatures in `calt`.
+OpenType Feature is used to control the font's built-in variants and ligatures. You can remove some ligatures or features you don't want to, change feature's trigger rule or add some new rules by modifying OpenType Feature.
+
+By default, the Python module in [`source/py/feature/`](./source/py/feature) will generate feature rule string and load it at build time. You can modify the features or customize tags there.
+
+If you would like to modify the feature file instead, run `build.py` with `--apply-fea-file` flag, the feature file from [`source/features/{regular,italic}.fea`](./source/features) will be loaded.
 
 ### Chinese version
 
@@ -577,7 +603,9 @@ If you want to build CN base fonts from variable (about 35 MB), setup `"cn.use_s
 
 #### Narrow spacing in CN glyphs
 
-If you think that CN glyphs spacing is **tooooo large**, there is a **EXPERIMENTAL** build option `cn.narrow` or flag `--cn-narrow` to narrow spacing in CN glyphs. You can see effect and track issues in [#249](https://github.com/subframe7536/maple-font/issues/249)
+If you think that **CN glyphs spacing is TOOOOOO large**, there is a build option `cn.narrow` or cli flag `--cn-narrow` to narrow spacing in CN glyphs, but this will make the font cannot be recogized as monospaced font.
+
+You can see effect in [#249](https://github.com/subframe7536/maple-font/issues/249#issuecomment-2871260476).
 
 #### GitHub Mirror
 
@@ -591,42 +619,75 @@ By enabling `cv99`, all Chinese punctuation marks will be centred. See more deta
 
 ```
 usage: build.py [-h] [-v] [-d] [--debug] [-n] [--feat FEAT] [--apply-fea-file]
-                [--hinted | --no-hinted] [--liga | --no-liga] [--cn-narrow]
-                [--nerd-font | --no-nerd-font] [--cn | --no-cn] [--cn-both]
-                [--ttf-only] [--cache] [--cn-rebuild] [--archive]
+                [--hinted | --no-hinted] [--liga | --no-liga] [--nf-mono]
+                [--cn-narrow] [--cn-scale-factor CN_SCALE_FACTOR] [--nerd-font |
+                --no-nerd-font] [--cn | --no-cn] [--cn-both] [--ttf-only]
+                [--least-styles] [--font-patcher] [--cache] [--cn-rebuild]
+                [--archive]
 
 ✨ Builder and optimizer for Maple Mono
 
 options:
-  -h, --help        show this help message and exit
-  -v, --version     show program's version number and exit
-  -d, --dry         Output config and exit
-  --debug           Add `Debug` suffix to family name, skip optimization
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+  -d, --dry             Output config and exit
+  --debug               Add `Debug` suffix to family name and faster build
 
 Feature Options:
-  -n, --normal      Use normal preset, just like `JetBrains Mono` with slashed zero
-  --feat FEAT       Freeze font features, splited by `,` (e.g. `--feat
-                    zero,cv01,ss07,ss08`). No effect on variable format
-  --apply-fea-file  Load feature file from `source/features/{regular,italic}.fea` to
-                    variable font
-  --hinted          Use hinted font as base font in NF / CN / NF-CN (default)
-  --no-hinted       Use unhinted font as base font in NF / CN / NF-CN
-  --liga            Preserve all the ligatures (default)
-  --no-liga         Remove all the ligatures
-  --cn-narrow       Make CN characters narrow (experimental)
+  -n, --normal          Use normal preset, just like `JetBrains Mono` with slashed
+                        zero
+  --feat FEAT           Freeze font features, splited by `,` (e.g. `--feat
+                        zero,cv01,ss07,ss08`). No effect on variable format
+  --apply-fea-file      Load feature file from `source/features/{regular,italic}.fea`
+                        to variable font
+  --hinted              Use hinted font as base font in NF / CN / NF-CN (default)
+  --no-hinted           Use unhinted font as base font in NF / CN / NF-CN
+  --liga                Preserve all the ligatures (default)
+  --no-liga             Remove all the ligatures
+  --nf-mono             Fixed Nerd Font icons' width
+  --cn-narrow           Make CN / JP characters narrow (And the font cannot be
+                        recogized as monospaced font)
+  --cn-scale-factor CN_SCALE_FACTOR
+                        Scale factor for CN / JP glyphs. Format: <factor> or
+                        <width_factor>,<height_factor> (e.g. 1.1 or 1.2,1.1)
 
 Build Options:
-  --nerd-font       Build Nerd-Font version (default)
-  --no-nerd-font    Do not build Nerd-Font version
-  --cn              Build Chinese version
-  --no-cn           Do not build Chinese version (default)
-  --cn-both         Build both `Maple Mono CN` and `Maple Mono NF CN`. Nerd-Font
-                    version must be enabled
-  --ttf-only        Only build TTF format
-  --cache           Reuse font cache of TTF, OTF and Woff2 formats
-  --cn-rebuild      Reinstantiate CN base font
-  --archive         Build font archives with config and license. If has `--cache`
-                    flag, only archive Nerd-Font and CN formats
+  --nerd-font           Build Nerd-Font version (default)
+  --no-nerd-font        Do not build Nerd-Font version
+  --cn                  Build Chinese version
+  --no-cn               Do not build Chinese version (default)
+  --cn-both             Build both `Maple Mono CN` and `Maple Mono NF CN`. Nerd-Font
+                        version must be enabled
+  --ttf-only            Only build TTF format
+  --least-styles        Only build Regular / Bold / Italic / BoldItalic style
+  --font-patcher        Force the use of Nerd Font Patcher to build NF format
+  --cache               Reuse font cache of TTF, OTF and Woff2 formats
+  --cn-rebuild          Reinstantiate variable CN base font
+  --archive             Build font archives with config and license. If has `--cache`
+                        flag, only archive NF and CN formats
+```
+
+## Development
+
+### Design
+
+Using [FontLab](https://www.fontlab.com/) or [Glyphs](https://glyphs.app), generate variable TTF into `source/` folder.
+
+### Build
+
+```sh
+# Init project
+uv sync
+# Dev
+uv run build.py --ttf-only --cn --debug
+# Update nerd font
+uv run task.py nerd-font
+# Update fea file
+uv run task.py fea
+# Update landing page info
+uv run task.py page
+# Release
+uv run task.py release 7.0
 ```
 
 ## Credit

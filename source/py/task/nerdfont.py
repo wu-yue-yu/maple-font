@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
 import json
-from os import path, remove
+from os import environ, path, remove
 from urllib.request import urlopen
 from fontTools.varLib import TTFont
 from fontTools.subset import Subsetter
@@ -18,7 +17,7 @@ family_name = "Maple Mono"
 font_forge_bin = get_font_forge_bin()
 
 if not path.exists(base_font_path):
-    print("font not exist, please run `python build.py` first")
+    print("font not exist, please run this command first:\n\n    python build.py --ttf-only --no-nerd-font --least-styles\n")
     exit(1)
 
 
@@ -49,7 +48,6 @@ def update_config_json(config_path: str, version: str):
 
         file.seek(0)
         json.dump(data, file, ensure_ascii=False, indent=2)
-        file.truncate()
 
 
 def check_update():
@@ -79,7 +77,7 @@ def check_update():
         print(
             f"Current version {current_version} not match latest version {latest_version}, update"
         )
-        if not check_font_patcher(latest_version):
+        if not check_font_patcher(latest_version, environ.get("GITHUB", "github.com")):
             print("Fail to update Font-Patcher, exit")
             exit(1)
         update_config_json("./config.json", latest_version)
@@ -145,13 +143,11 @@ def subset(mono: bool, unicodes: list[int]):
     font.close()
 
 
-def main():
-    check_update()
+def nerd_font(no_update: bool):
+    if not no_update:
+        check_update()
+
     with open("./FontPatcher/glyphnames.json", "r", encoding="utf-8") as f:
         unicodes = parse_codes_from_json(json.load(f))
         subset(True, unicodes=unicodes)
         subset(False, unicodes=unicodes)
-
-
-if __name__ == "__main__":
-    main()
